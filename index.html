@@ -29,10 +29,22 @@
                 </div>
                 <div class="p-4 font-bold">
                     <img
-                        id="fuyoless-img"
+                        id="fuyo-waiting"
                         src="./assets/images/fuy_eh.png"
                         alt="fuyo-image"
                         class="w-16 h-16"
+                    />
+                    <img
+                        id="fuyo-cry"
+                        src="./assets/images/fuy_uwoo.png"
+                        alt="fuyo-cry"
+                        class="w-16 h-16 hidden"
+                    />
+                    <img
+                        id="fuyo-happy"
+                        src="./assets/images/fuy_yee.png"
+                        alt="fuyo-happy"
+                        class="w-16 h-16 hidden"
                     />
                     <div id="fuyoless">Calculating your time without Fuyo...</div>
                     <div id="livestream" class="hidden">
@@ -44,7 +56,6 @@
 
         <script>
             const fuyoless = document.querySelector('#fuyoless');
-            const fuyolessImg = document.querySelector('#fuyoless-img');
             const livestream = document.querySelector('#livestream');
             function calculateDiffs(time) {
                 const now = new Date();
@@ -63,7 +74,8 @@
                     const [{ id, title }] = liveData;
                     const ytlink = `https://youtube.com/live/${id}`;
 
-                    fuyolessImg.src = './assets/images/fuy_yee.png';
+                    document.querySelector('#fuyo-waiting').classList.toggle('hidden');
+                    document.querySelector('#fuyo-happy').classList.toggle('hidden');
                     fuyoless.innerText = 'Fuyo is LIVE! Fuyoless is no more!';
                     const link = livestream.querySelector('a');
                     link.href = ytlink;
@@ -83,7 +95,8 @@
                     const result = calculateDiffs(stream_end);
                     if (!changed) {
                         changed = true;
-                        fuyolessImg.src = './assets/images/fuy_uwoo.png';
+                        document.querySelector('#fuyo-waiting').classList.toggle('hidden');
+                        document.querySelector('#fuyo-cry').classList.toggle('hidden');
                     }
                     fuyoless.innerHTML = `We have been <span class="text-red-600">Fuyoless</span> for : <br /> ${result}`;
                 }, 1000);
