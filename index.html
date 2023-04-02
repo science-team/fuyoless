@@ -22,16 +22,16 @@
                     </div>
                     <p>
                         This is a formulated page to calculate how much time have passed since the
-                        last time we are away from
-                        <span class="text-green-500">la cosa verde</span>
-                        <span class="text-orange-600 font-bold">Fuyo Cloverfield</span>
+                        last time we are away from our lord and saviour
+                        <span class="text-green-500">The Green Thing</span>
+                        <span class="text-green-600 font-bold">Fuyo Cloverfield</span>
                     </p>
                 </div>
-                <div class="p-4 font-bold">
+                <div class="p-4">
                     <img
                         id="fuyo-waiting"
                         src="./assets/images/fuy_eh.png"
-                        alt="fuyo-image"
+                        alt="fuyo-loading"
                         class="w-16 h-16"
                     />
                     <img
@@ -46,9 +46,19 @@
                         alt="fuyo-happy"
                         class="w-16 h-16 hidden"
                     />
-                    <div id="fuyoless">Calculating your time without Fuyo...</div>
-                    <div id="livestream" class="hidden">
-                        LIVE : <a class="text-red-500" href="#"></a>
+                    <div id="fuyoless" class="font-bold">
+                        Calculating your time without <span class="text-green-600">Fuyo...</span>
+                    </div>
+                    <div id="livestream" class="hidden font-bold">
+                        <span>LIVE AT</span> : <br />
+                        <a class="text-red-500" href="#">
+                            <span aria-label="title"></span>
+                            <img
+                                src=""
+                                alt="livestream thumbnail"
+                                class="w-64 border-2 border-solid border-gray-500 rounded"
+                            />
+                        </a>
                     </div>
                 </div>
             </div>
@@ -72,24 +82,31 @@
                 ).then((res) => res.json());
                 if (liveData.length) {
                     const [{ id, title }] = liveData;
-                    const ytlink = `https://youtube.com/live/${id}`;
+                    const link = `https://youtube.com/live/${id}`;
+                    const thumbnail = `https://i.ytimg.com/vi/${id}/maxresdefault_live.jpg`;
 
-                    document.querySelector('#fuyo-waiting').classList.toggle('hidden');
-                    document.querySelector('#fuyo-happy').classList.toggle('hidden');
-                    fuyoless.innerText = 'Fuyo is LIVE! Fuyoless is no more!';
-                    const link = livestream.querySelector('a');
-                    link.href = ytlink;
-                    link.innerText = title;
+                    setTimeout(() => {
+                        document.querySelector('#fuyo-waiting').classList.toggle('hidden');
+                        document.querySelector('#fuyo-happy').classList.toggle('hidden');
+                        fuyoless.innerHTML =
+                            'Fuyo is LIVE! <span class="text-red-600">Fuyoless</span> is no more!';
+                        livestream.querySelector('img').src = thumbnail;
+                        livestream.querySelector('a').href = link;
+                        livestream.querySelector('span[aria-label="title"]').innerText = title;
 
-                    livestream.classList.toggle('hidden');
+                        livestream.classList.toggle('hidden');
+                    }, 1000);
                     return;
                 }
                 const lastStreamData = await fetch(
                     `https://holodex.net/api/v2/videos?channel_id=${channelID}&status=past&limit=1&type=stream`
                 ).then((res) => res.json());
-                const [{ available_at, duration }] = lastStreamData;
+                const [{ available_at, duration, id, title }] = lastStreamData;
                 const stream_start = new Date(available_at);
                 const stream_end = new Date(stream_start.getTime() + duration * 1000);
+                const link = `https://youtube.com/live/${id}`;
+                const thumbnail = `https://i.ytimg.com/vi/${id}/maxresdefault_live.jpg`;
+
                 let changed = false;
                 setInterval(() => {
                     const result = calculateDiffs(stream_end);
@@ -97,6 +114,11 @@
                         changed = true;
                         document.querySelector('#fuyo-waiting').classList.toggle('hidden');
                         document.querySelector('#fuyo-cry').classList.toggle('hidden');
+                        livestream.querySelector('span').innerText = 'LAST SEEN';
+                        livestream.querySelector('img').src = thumbnail;
+                        livestream.querySelector('a').href = link;
+                        livestream.querySelector('span[aria-label="title"]').innerText = title;
+                        livestream.classList.toggle('hidden');
                     }
                     fuyoless.innerHTML = `We have been <span class="text-red-600">Fuyoless</span> for : <br /> ${result}`;
                 }, 1000);
