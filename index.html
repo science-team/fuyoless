@@ -78,7 +78,12 @@
             }
             async function chubaless(channelID = 'UC8zgKaS8LiyL28mdhRC2nBg') {
                 const liveData = await fetch(
-                    `https://holodex.net/api/v2/live?channel_id=${channelID}&limit=1&status=live`
+                    `https://holodex.net/api/v2/live?channel_id=${channelID}&limit=1&status=live`,
+                    {
+                        headers: {
+                            'x-apikey': 'edb602f2-2f28-4cc4-86b6-782ee1279467'
+                        }
+                    }
                 ).then((res) => res.json());
                 if (liveData.length) {
                     const [{ id, title }] = liveData;
@@ -99,7 +104,12 @@
                     return;
                 }
                 const lastStreamData = await fetch(
-                    `https://holodex.net/api/v2/videos?channel_id=${channelID}&status=past&limit=1&type=stream`
+                    `https://holodex.net/api/v2/videos?channel_id=${channelID}&status=past&limit=1&type=stream`,
+                    {
+                        headers: {
+                            'x-apikey': 'edb602f2-2f28-4cc4-86b6-782ee1279467'
+                        }
+                    }
                 ).then((res) => res.json());
                 const [{ available_at, duration, id, title }] = lastStreamData;
                 const stream_start = new Date(available_at);
